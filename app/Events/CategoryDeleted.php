@@ -1,0 +1,41 @@
+<?php
+namespace App\Events;
+
+use Illuminate\Broadcasting\Channel;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Broadcasting\InteractsWithSockets;
+
+class CategoryDeleted implements ShouldBroadcast
+{
+    use Dispatchable, InteractsWithSockets, SerializesModels;
+
+    public $category;
+
+    public function __construct(array $category)
+    {
+        $this->category = $category;
+    }
+
+
+    public function broadcastOn()
+    {
+        return new Channel('categories');
+    }
+
+    public function broadcastWith()
+    {
+        return [
+            'id' => $this->category->id,
+            'name' => $this->category->name,
+        ];
+    }
+
+    public function broadcastAs()
+    {
+        return 'category.deleted';
+    }
+
+
+}
